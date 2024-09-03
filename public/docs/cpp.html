@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Documentation - CodeCal</title>
+    <link href="../css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>C++ Documentation</h1>
+        <p>This guide will help you integrate CalScript with C++.</p>
+        <h2>Setup</h2>
+        <p>Save <code>CalScriptParser.cpp</code> in your project directory and compile with <code>g++ CalScriptParser.cpp -o CalScriptParser</code>.</p>
+        <h2>Usage</h2>
+        <pre><code>#include "CalScriptParser.cpp"
+
+int main() {
+    std::string script = R"(
+    Event: "Meeting" -> Day: "Monday" @ Time: "09:00"
+    Repeat: "Daily Standup" -> Every: "1 Days" @ Time: "10:00"
+    )";
+
+    CalScriptParser parser;
+    parser.parse(script);
+    auto events = parser.getEvents();
+    for (auto& event : events) {
+        event.print();
+    }
+
+    return 0;
+}
+        </code></pre>
+    </div>
+</body>
+
+</html>

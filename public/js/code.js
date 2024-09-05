@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function analyzeExtractedText(text) {
         const language = 'english';
-        fetch('https://www.gencal.noahabebe.com/compile', {
+        fetch('/compile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ language, code: text }) // Text sent for AI analysis
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const language = document.getElementById('language-select').value;
         const code = document.getElementById('code-editor').value;
         // Fetch event data and generate ICS file
-        fetch('https://www.gencal.noahabebe.com/compile', {
+        fetch('/compile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ language, code }) 
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
         outputContent.innerHTML = '';
         errorContent.innerHTML = '';
 
-        fetch('https://www.gencal.noahabebe.com/compile', {
+        fetch('/compile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ language, code })

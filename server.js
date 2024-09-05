@@ -7,15 +7,17 @@ require('dotenv').config();
 
 const app = express();
 
-// Use CORS to allow requests from specific origins
+
 app.use(cors({
-    origin: 'https://gen-cal.vercel.app' // Allow requests from your Vercel app
+    origin: 'https://gen-cal.vercel.app',
+    methods: ['GET', 'POST'], 
+    credentials: true 
 }));
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ensure Groq API key is set
+
 if (!process.env.GROQ_API_KEY) {
     throw new Error("The GROQ_API_KEY environment variable is not set.");
 } 

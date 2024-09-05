@@ -1,17 +1,24 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const path = require('path');
 const { Groq } = require('groq-sdk');
 require('dotenv').config();
 
 const app = express();
+
+// Use CORS to allow requests from specific origins
+app.use(cors({
+    origin: 'https://gen-cal.vercel.app' // Allow requests from your Vercel app
+}));
+
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Ensure Groq API key is set
 if (!process.env.GROQ_API_KEY) {
     throw new Error("The GROQ_API_KEY environment variable is not set.");
-}
+} 
 
 // Groq API credentials
 const client = new Groq({

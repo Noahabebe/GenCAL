@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function analyzeExtractedText(text) {
         const language = 'english';
-        fetch('http://localhost:3004/compile', {
+        fetch('https://wwww.gencal.noahabebe.com/compile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ language, code: text }) // Text sent for AI analysis

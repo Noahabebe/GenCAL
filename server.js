@@ -17,6 +17,14 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+    if (req.headers.host.startsWith('www.')) {
+        res.redirect(301, `https://${req.headers.host.slice(4)}${req.url}`);
+    } else {
+        next();
+    }
+});
+
 
 if (!process.env.GROQ_API_KEY) {
     throw new Error("The GROQ_API_KEY environment variable is not set.");

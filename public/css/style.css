@@ -7,16 +7,18 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f0f0f0;
+  background-color: #4b0ee7;
 }
 
 .container {
   text-align: center;
   padding: 20px;
+ 
 }
 
 .header, .calendar-container, .event-pool {
   margin-bottom: 20px;
+  
 }
 
 button {
@@ -36,8 +38,135 @@ button {
   margin-top: 20px;
   background-color: #fff;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #fff;
   width: 80%;
   max-height: 300px;
   overflow-y: auto;
+}
+
+
+
+#output-content {
+  margin-top: 20px;
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #fff;
+  width: 80%;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.event-info {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #fff;
+}
+
+.week-dates {
+  font-weight: bold;
+}
+
+ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  list-style: none;
+  padding: 0;
+  gap: 2em;
+}
+
+li {
+  background-color: #e0e0e0;
+  padding: 10px;
+}
+
+p {
+  margin: 5px 0;
+}
+.calendar-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-table th, .calendar-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.calendar-table th {
+  background-color: #f2f2f2;
+  border-radius: 10px 10px 0 0;
+}
+
+.calendar-table tbody tr {
+  cursor: move;
+}
+
+.calendar-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.calendar-table td[contenteditable="true"] {
+  background-color: #fffbe6;
+}
+
+/* General container styling */
+
+
+/* Calendar Table styling */
+.table-calendar {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.table-calendar th, .table-calendar td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table-calendar thead {
+  background-color: #f2f2f2;
+  border-radius: 10px 10px 0 0;
+}
+
+.table-calendar tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.table-calendar tr:hover {
+  background-color: #f1f1f1;
+}
+.table-calendar tbody td {
+  border: 1px solid #f2f2f2;
+}
+
+/* Event Details Styling */
+.event-details {
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.event-title {
+  font-size: 1.2em;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.event-description {
+  font-size: 0.9em;
+  color: #333;
 }

@@ -3,32 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Calendar IDE</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <title>Calendar App</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h2>Code Calendar IDE</h2>
-        
-        <label for="language-select">Choose Language:</label>
-        <select id="language-select">
-            <option value="python">Python</option>
-            <option value="java">Java</option>
-            <option value="cpp">C++</option>
+    <div id="controls">
+        <button id="run-button">Generate Calendar</button>
+        <button id="print-button">Print Calendar</button>
+        <label for="font-select">Font:</label>
+        <select id="font-select">
+            <option value="Arial">Arial</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Tahoma">Tahoma</option>
         </select>
-
-        <textarea id="code-editor" placeholder="Write your code here..."></textarea>
-        <button id="run-button">Run Code</button>
-        
-        <div id="output">
-            <h3>Output:</h3>
-            <pre id="output-content"></pre>
-        </div>
-        <div id="error">
-            <h3>Errors:</h3>
-            <pre id="error-content"></pre>
-        </div>
+        <label for="color-select">Text Color:</label>
+        <input type="color" id="color-select" value="#000000">
+        <label for="table-color-select">Table Color:</label>
+        <input type="color" id="table-color-select" value="#ffffff">
+        <button id="download-ics">Download Calendar (.ics)</button>
+        <input type="file" id="upload-image" accept="image/*,.pdf">
+        <button id="upload-button">Upload Image/PDF</button>
     </div>
+
+    <div id="code-editor-container">
+        <textarea id="code-editor" rows="10" cols="50" placeholder="Enter your code here..."></textarea>
+        <select id="language-select">
+            <option value="english">English</option>
+        </select>
+    </div>
+
+    <div id="output-container">
+        <div id="output-content"></div> 
+        <div class="container my-4">
+        <div id="calendar-content" class="my-4"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+
+    </div>
+    <div id="error-content" style="color:red;"></div>
+
     <script src="js/code.js"></script>
 </body>
 </html>

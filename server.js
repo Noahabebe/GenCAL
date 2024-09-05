@@ -1,84 +1,130 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const { exec } = require('child_process');
 const path = require('path');
-const axios = require('axios');
+const { Groq } = require('groq-sdk');
+require('dotenv').config();
 
 const app = express();
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Function to extract required Python packages from a library file
-function extractPythonPackages(libraryFile) {
-    const content = fs.readFileSync(libraryFile, 'utf8');
-    const matches = content.match(/import (\w+)/g) || [];
-    return Array.from(new Set(matches.map(m => m.replace('import ', ''))));
+// Ensure Groq API key is set
+if (!process.env.GROQ_API_KEY) {
+    throw new Error("The GROQ_API_KEY environment variable is not set.");
 }
 
-// Function to install packages via Code Converter API
-async function installPackages(packages) {
+// Groq API credentials
+const client = new Groq({
+    apiKey: process.env.GROQ_API_KEY
+});
+
+const MODEL = 'llama3-70b-8192';
+
+async function compileCode(code, language) {
     try {
-        const response = await axios.post('https://code-converter-api.example.com/install', { packages });
-        return response.data;
+        const currentDate = new Date();
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Detect the user's local timezone
+        const options = {
+            timeZone,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        };
+        
+        // Format date-time with detected timezone
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+
+        const response = await client.chat.completions.create({
+            model: MODEL,
+            messages: [
+                { role: "system", content: `You are a gregorian calendar webapp that converts event-related sentences into JSON-formatted calendar data according to the current date and time is ${formattedDate}, the timezone is ${timeZone}` },
+                { role: "user", content: `Only provide json no description. Convert the following data into JSON: ${code}. Date and Time is ${formattedDate}, the timezone is ${timeZone}. Example Format:
+                {
+                  "events": [
+                    {
+                      "id": 1,
+                      "title": "Team Meeting",
+                      "date": "2024-09-15",
+                      "startTime": "09:00",
+                      "endTime": "10:00",
+                      "description": "Monthly team meeting to discuss project progress.",
+                      "place": "Conference Room A",
+                      "link": "https://zoom.us/j/123456789"
+                    }
+                  ]
+                }`
+                }
+            ]
+        });
+
+        // Log raw response for debugging
+        console.log('Raw response from Groq:', response.choices[0].message.content);
+        
+        return response.choices[0].message.content;
     } catch (error) {
-        throw new Error(`Failed to install packages: ${error.message}`);
+        console.error('Error in Groq API:', error.response ? error.response.data : error.message);
+        throw new Error('Failed to compile code');
     }
 }
 
-app.post('/execute', async (req, res) => {
-    const { language, code } = req.body;
-    const tempFile = `temp_script`;
-    let libraryFile;
-    let command;
+// Custom calendar rendering logic
+const getISOWeekNumber = (date) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+    return Math.ceil(((+d - +new Date(d.getFullYear(), 0, 1)) / 86400000 + 1) / 7);
+};
+
+function groupEventsByWeek(events) {
+    return events.reduce((acc, event) => {
+        const week = getISOWeekNumber(event.date);
+        if (!acc[week]) acc[week] = [];
+        acc[week].push(event);
+        return acc;
+    }, {});
+}
+
+function renderCalendar(events) {
+    const groupedByWeek = groupEventsByWeek(events);
+    return groupedByWeek;
+}
+
+app.post('/compile', async (req, res) => {
+    const { code, language } = req.body;
 
     try {
-        switch (language) {
-            case 'python':
-                libraryFile = 'public/libraries/CalScriptParser.py';
-                fs.writeFileSync(`${tempFile}.py`, code);
-                const libraryCode = fs.readFileSync(libraryFile, 'utf8');
-                fs.appendFileSync(`${tempFile}.py`, '\n' + libraryCode);
+        const compiledCode = await compileCode(code, language);
 
-                // Extract packages needed by the library
-                const packages = extractPythonPackages(libraryFile);
-                if (packages.length > 0) {
-                    await installPackages(packages);
-                }
-
-                command = `python3 ${tempFile}.py`;
-                break;
-
-            case 'java':
-                libraryFile = 'public/libraries/CalScriptParser.java';
-                fs.writeFileSync('Main.java', code);
-                fs.writeFileSync('CalScriptParser.java', fs.readFileSync(libraryFile));
-                command = 'javac Main.java CalScriptParser.java && java Main';
-                break;
-
-            case 'cpp':
-                libraryFile = 'public/libraries/CalScriptParser.cpp';
-                fs.writeFileSync('main.cpp', code);
-                fs.writeFileSync('CalScriptParser.cpp', fs.readFileSync(libraryFile));
-                command = 'g++ main.cpp CalScriptParser.cpp -o main && ./main';
-                break;
-
-            default:
-                return res.status(400).json({ error: 'Unsupported language' });
+        let jsonOutput;
+        try {
+           
+            jsonOutput = JSON.parse(compiledCode);
+        } catch (e) {
+            console.error('Error parsing JSON:', e.message);
+            return res.status(400).json({
+                error: "Failed to parse the compiled code as JSON",
+                rawOutput: compiledCode
+            });
         }
 
-        // Execute the code
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                return res.status(500).json({ error: stderr });
-            }
-            res.json({ output: stdout });
-        });
+      
+        if (jsonOutput.events) {
+            const calendar = renderCalendar(jsonOutput.events);
+            return res.json({ events: jsonOutput.events, calendar });
+        } else {
+            return res.json(jsonOutput);
+        }
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error compiling code:', error.message);
+        res.status(500).json({ error: 'Code compilation failed', details: error.message });
     }
 });
 
-app.listen(3004, () => {
-    console.log('Server listening on port 3004');
+const PORT = process.env.PORT || 3004;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });

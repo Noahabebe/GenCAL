@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const language = document.getElementById('language-select').value;
         const code = document.getElementById('code-editor').value;
         // Fetch event data and generate ICS file
-        fetch('http://localhost:3004/compile', {
+        fetch('https://wwww.gencal.noahabebe.com/compile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ language, code }) 
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
         outputContent.innerHTML = '';
         errorContent.innerHTML = '';
 
-        fetch('http://localhost:3004/compile', {
+        fetch('https://wwww.gencal.noahabebe.com/compile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ language, code })

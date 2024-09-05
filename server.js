@@ -1,30 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const path = require('path');
 const { Groq } = require('groq-sdk');
 require('dotenv').config();
 
 const app = express();
 
-
-app.use(cors({
-    origin: 'https://gen-cal.vercel.app',
-    methods: ['GET', 'POST'], 
-    credentials: true 
-}));
-
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use((req, res, next) => {
-    if (req.headers.host.startsWith('www.')) {
-        res.redirect(301, `https://${req.headers.host.slice(4)}${req.url}`);
-    } else {
-        next();
-    }
-});
-
 
 if (!process.env.GROQ_API_KEY) {
     throw new Error("The GROQ_API_KEY environment variable is not set.");

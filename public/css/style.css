@@ -7,7 +7,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #ffffff;
+    background-color: #333;
     color: #333;
 }
 
@@ -16,7 +16,7 @@ body {
     padding: 40px;
     max-width: 1200px;
     margin: 0 auto;
-    background-color: #ffffff;
+    background-color: #333;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
@@ -38,7 +38,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #f2f2f2;
 }
 
 #code-editor {
@@ -55,7 +55,7 @@ button:hover {
 
 #output {
     margin-top: 20px;
-    background-color: #fff;
+    background-color: #333;
     padding: 20px;
     border: 1px solid #ddd;
     width: 100%;
@@ -65,12 +65,11 @@ button:hover {
 }
 
 .event-info {
-    border: 1px solid #ddd;
+    border: 1px solid #f2f2f2;
     padding: 15px;
     margin: 10px 0;
-    background-color: #ffffff;
+    background-color: #333;
     border-radius: 5px;
-    transition: background;
 }
 		
 .event-info:hover {
@@ -86,7 +85,7 @@ gap: 1.5em;
 }
 
 li {
-background-color: #007bff;
+background-color: #f2f2f2;
 color: white;
 padding: 15px;
 border-radius: 10px;
@@ -94,7 +93,7 @@ transition: background-color 0.3s ease;
 }
 
 li:hover {
-background-color: #0056b3;
+background-color: #f2f2f2;
 }
 
 p {
@@ -121,7 +120,7 @@ transition: background-color 0.3s ease;
 }
 
 .table-calendar th {
-background-color: #007bff;
+background-color: #f2f2f2;
 color: white;
 }
 
@@ -143,7 +142,7 @@ outline: 2px solid #f0ad4e;
 }
 
 .event-details {
-border: 1px solid #007bff;
+border: 1px solid #f2f2f2;
 border-radius: 5px;
 padding: 15px;
 margin: 10px 0;
@@ -152,7 +151,7 @@ background-color: #ffffff;
 
 .event-title {
 font-size: 1.2em;
-color: #007bff;
+color: #f2f2f2;
 margin-bottom: 10px;
 }
 

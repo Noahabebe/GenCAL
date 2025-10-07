@@ -18,7 +18,7 @@ const client = new Groq({
     apiKey: process.env.GROQ_API_KEY
 });
 
-const MODEL = 'llama3-70b-8192';
+const MODEL = 'groq/compound-mini';
 
 async function compileCode(code, language) {
     try {
